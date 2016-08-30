@@ -21,7 +21,7 @@ public class MoneyManager {
     public static int number = 0;
 
     /**
-     * 产生储存五个钱对象的集合
+     * 产生储存十个钱对象的集合
      * @param x
      * @param y
      * @return
@@ -46,28 +46,19 @@ public class MoneyManager {
      * @return
      */
     public static List<Money> updateMoneys(List<Money> moneys, View view, float x, float y) {
-        //获取屏幕的宽高
-//        WindowManager wm = (WindowManager) context
-//                .getSystemService(Context.WINDOW_SERVICE);
         List<Money> moneyList=new ArrayList<>();
-        int width =view.getMeasuredWidth();// wm.getDefaultDisplay().getWidth();
-        int height =view.getMeasuredHeight();// wm.getDefaultDisplay().getHeight();
+        int width =view.getMeasuredWidth();
+        int height =view.getMeasuredHeight();
         //更新集合里面每个对象的坐标
         for (Money money : moneys) {
             money.updateLocation();
+            //如果对象的范围还在控件内，则添加，不在则扔掉
             if (money.locationX>0&&money.locationX<width&&money.locationY>0&&money.locationY<height){
                 moneyList.add(money);
 
             }
         }
-//        //去除集合中超过屏幕的部分
-//        for (int i = 0; i >=moneys.size() ; i++) {
-//            if (!(moneys.get(i).locationX<0||moneys.get(i).locationX>width||moneys.get(i).locationY<0||moneys.get(i).locationY>height)){
-//            }else {
-//                moneyList.add(moneys.get(i));
-//            }
-//
-//        }
+        //用于控制动画时间的长短，往里面添加，就会有新的对象产生，就会产生源源不断的现象，不添加，则撒钱完毕
         if (number<10) {
             //在添加五个进去
             moneyList.addAll(createMoney(x, y));

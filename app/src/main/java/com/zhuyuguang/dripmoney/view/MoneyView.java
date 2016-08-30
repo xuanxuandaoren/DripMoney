@@ -4,10 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.WindowManager;
@@ -75,38 +73,38 @@ public class MoneyView extends View {
         moneyHeight = money.getHeight();
 
         paint = new Paint();
-        moneys = MoneyManager.createMoney(width / 2, height / 2 - moneyCationHeight / 2);
+
 
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         width = wm.getDefaultDisplay().getWidth();
         height = wm.getDefaultDisplay().getHeight();
+        //初始化集合
+        moneys = MoneyManager.createMoney(width / 2, height / 2 - moneyCationHeight / 10);
 
 
     }
 
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        //画钱袋
         canvas.drawBitmap(moneyCationScale, width / 2 - moneyCationWidth / 10, height / 2 - moneyCationHeight / 10, paint);
+        //如果集合里没有内容就不在进行绘制
         if (moneys.size() <= 0) {
-            //添加监听
+            //添加动画结束监听
             if (listener != null) {
                 listener.onEnd();
             }
         } else {
-
+            //如果集合里有内容字绘制集合，
             for (int i = 0; i < moneys.size(); i++) {
                 moneys.get(i).drawMoney(canvas, money, money1, money2, paint);
             }
-
+            //更新集合里面钱的坐标位置
             moneys = MoneyManager.updateMoneys(moneys, this, width / 2 - moneyWidth / 2, height / 2 - moneyCationHeight / 10 - moneyHeight / 2);
-
+            //延时50毫秒重新绘制
             postInvalidateDelayed(50);
         }
     }
